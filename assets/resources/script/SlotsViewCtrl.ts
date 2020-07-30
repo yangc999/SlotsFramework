@@ -7,6 +7,8 @@
 
 const {ccclass, property} = cc._decorator;
 
+import Stately = require('stately.js');
+
 @ccclass
 export default class SlotsViewCtrl extends cc.Component {
 
@@ -16,13 +18,46 @@ export default class SlotsViewCtrl extends cc.Component {
     // @property
     // text: string = 'hello';
 
+    @property({
+        tooltip: "滚轴", 
+        type: [cc.Node], 
+    })
+    reels: cc.Node[] = [];
+
+    fsm: Stately = null;
+
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {}
-
-    start () {
-
+    onLoad () {
+        // this.fsm = Stately.machine({});
     }
 
-    // update (dt) {}
+    start () {
+        this.reels.forEach(element => {
+            
+        });
+    }
+
+    update (dt) {
+        
+    }
+
+    // test 
+    startSpin () {
+        this.reels.forEach(element => {
+            element.getComponent("ReelViewCtrl").startSpin();
+        });
+    }
+    
+    stopSpin () {
+        this.reels.forEach(element => {
+            element.getComponent("ReelViewCtrl").stopSpin();
+        });
+    }
+
+    superSpin () {
+        this.reels.forEach(element => {
+            element.getComponent("ReelViewCtrl").superSpin();
+        });
+    }
 }

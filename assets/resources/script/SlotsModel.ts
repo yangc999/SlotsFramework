@@ -7,6 +7,8 @@
 
 const {ccclass, property} = cc._decorator;
 
+import SymbolConfig from "./SymbolConfig";
+
 @ccclass
 export default class SlotsModel extends cc.Component {
 
@@ -15,6 +17,9 @@ export default class SlotsModel extends cc.Component {
 
     // @property
     // text: string = 'hello';
+
+    @property([SymbolConfig])
+    symbols: SymbolConfig[] = [];
 
     // LIFE-CYCLE CALLBACKS:
 

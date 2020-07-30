@@ -8,8 +8,6 @@
 const {ccclass, property} = cc._decorator;
 
 import VMParent from "../../modelView/VMParent";
-import SymbolConfig from "./SymbolConfig";
-import ReelConfig from "./ReelConfig";
 
 @ccclass
 export default class ReelModel extends VMParent {
@@ -20,21 +18,13 @@ export default class ReelModel extends VMParent {
     // @property
     // text: string = 'hello';
 
-    @property(ReelConfig)
-    config: ReelConfig = new ReelConfig();
-
-    @property([SymbolConfig])
-    symbols: SymbolConfig[] = [];
-
     @property([cc.String])
     initCell: string[] = [];
 
     @property([cc.String])
     rollCell: string[] = [];
 
-    @property([cc.String])
     finCell: string[] = [];
-
     rollIndex: number = 0;
     finIndex: number = 0;
     overIndex: number = 0;
@@ -61,7 +51,6 @@ export default class ReelModel extends VMParent {
     }
 
     updateCellData () {
-        cc.log("updateCell");
         var data = this.rollCell[this.rollIndex];
         if (data) {
             this.data.cellData.push(data);
@@ -71,7 +60,6 @@ export default class ReelModel extends VMParent {
     }
 
     updateCellDataReverse () {
-        cc.log("updateCell");
         var data = this.rollCell[this.rollCell.length-this.rollIndex-1];
         if (data) {
             this.data.cellData.unshift(data);

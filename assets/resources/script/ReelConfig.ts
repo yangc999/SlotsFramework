@@ -7,7 +7,7 @@
 
 const {ccclass, property} = cc._decorator;
 
-enum EaseType {
+export enum EaseType {
     Linear, 
     InSine, 
     InCubic, 
@@ -57,13 +57,7 @@ export default class ReelConfig {
         type: cc.Float, 
     })
     accDuration: number = 0;
-
-    @property({
-        tooltip: "减速终速", 
-        type: cc.Float, 
-    })
-    slowSpeed: number = 0;
-
+    
     @property({
         tooltip: "减速缓动类型", 
         type: cc.Enum(EaseType), 
@@ -77,12 +71,6 @@ export default class ReelConfig {
     slowDuration: number = 0;
 
     @property({
-        tooltip: "下探距离", 
-        type: cc.Float, 
-    })
-    overDistance: number = 0;
-
-    @property({
         tooltip: "回弹缓动类型", 
         type: cc.Enum(EaseType), 
     })
@@ -93,4 +81,10 @@ export default class ReelConfig {
         type: cc.Float, 
     })
     bounceDuration: number = 0;
+
+    @property({
+        tooltip: "延迟停止时间", 
+        type: cc.Float, 
+    })
+    delayDuration: number = 0;
 }

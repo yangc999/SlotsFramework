@@ -38,7 +38,7 @@ export default class CellModel extends VMBase {
     onValueInit () {
         var key = this.VM.getValue(this.watchPath);
         if (key) {
-            var symbols: Array<SymbolConfig> = this.rootNode.getComponent("ReelModel").symbols;
+            var symbols: SymbolConfig[] = this.rootNode.getComponent("SlotsModel").symbols;
             var spr = this.spriteNode.getComponent(cc.Sprite);
             var data = symbols.find(ele => ele.key === key);
             spr.spriteFrame = data.spriteFrame;
@@ -46,12 +46,8 @@ export default class CellModel extends VMBase {
     }
 
     onValueChanged(n, o, pathArr: string[]) {
-        let index = this.node.getParent().children.findIndex(n=> n === this.node);
-        if (index == 2) {
-            cc.log("changed", n.path);
-        }
         if (n) {
-            var symbols = this.rootNode.getComponent("ReelModel").symbols;
+            var symbols: SymbolConfig[] = this.rootNode.getComponent("SlotsModel").symbols;
             var spr = this.spriteNode.getComponent(cc.Sprite);
             var data = symbols.find(ele => ele.key === n);
             spr.spriteFrame = data.spriteFrame;

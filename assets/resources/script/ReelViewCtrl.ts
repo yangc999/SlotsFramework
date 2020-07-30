@@ -7,13 +7,21 @@
 
 const {ccclass, property} = cc._decorator;
 
+import ReelConfig from "./ReelConfig";
+import {EaseType} from "./ReelConfig";
 import Stately = require('stately.js');
 
 @ccclass
 export default class ReelViewCtrl extends cc.Component {
 
+    @property(cc.Node)
+    rootNode: cc.Node = null;
+
     @property(cc.Prefab)
     cellPrefab: cc.Prefab = null;
+
+    @property(ReelConfig)
+    config: ReelConfig = new ReelConfig();
 
     @property(cc.Size)
     cellSize: cc.Size = new cc.Size(0, 0);
@@ -25,6 +33,7 @@ export default class ReelViewCtrl extends cc.Component {
     cellGap: cc.Vec2 = new cc.Vec2(0, 0);
 
     lastSpeed: number = 0;
+    lastOffset: number = 0;
     overOffset: number = 0;
     rollingSpeed: number = 0;
     stateDuration: number = 0;
@@ -65,6 +74,7 @@ export default class ReelViewCtrl extends cc.Component {
                     self.fsmUpdate = self.overUpdate;
                     break;
                 case "BOUNCE":
+                    self.lastOffset = self.overOffset;
                     self.fsmUpdate = self.bounceUpdate;
                     break;
                 default:
@@ -132,7 +142,7 @@ export default class ReelViewCtrl extends cc.Component {
             var cellCtrl = cell.getComponent("CellViewCtrl");
             cellCtrl.visibleSize = this.cellSize;
             var cellVM = cell.getComponent("CellModel");
-            cellVM.rootNode = this.node;
+            cellVM.rootNode = this.rootNode;
             cellVM.watchPath = VM.getTag() + ".cellData." + i.toString();
             this.container.addChild(cell);
         }
@@ -146,15 +156,16 @@ export default class ReelViewCtrl extends cc.Component {
 
     idleUpdate (dt) {
         this.stateDuration += dt;
-        var cfg = this.node.getComponent("ReelModel").config;
+        var cfg = this.config;
     }
 
     accUpdate (dt) {
         this.stateDuration += dt;
-        var cfg = this.node.getComponent("ReelModel").config;
+        var cfg = this.config;
         var VM = this.node.getComponent("ReelModel");
         var ratio = Math.min(1, this.stateDuration/cfg.accDuration);
-        this.rollingSpeed = cc.misc.lerp(0, cfg.spinSpeed, ratio);
+        var finRatio = this.easeFunc(cfg.accEase)(ratio);
+        this.rollingSpeed = cc.misc.lerp(0, cfg.spinSpeed, finRatio);
         var step = this.rollingSpeed * dt;
         this.container.y += step;
         if (this.rollingSpeed > 0) {
@@ -186,7 +197,7 @@ export default class ReelViewCtrl extends cc.Component {
 
     spinUpdate (dt) {
         this.stateDuration += dt;
-        var cfg = this.node.getComponent("ReelModel").config;
+        var cfg = this.config;
         var VM = this.node.getComponent("ReelModel");
         this.rollingSpeed = cfg.spinSpeed;
         this.lastSpeed = this.rollingSpeed;
@@ -218,7 +229,7 @@ export default class ReelViewCtrl extends cc.Component {
 
     superUpdate (dt) {
         this.stateDuration += dt;
-        var cfg = this.node.getComponent("ReelModel").config;
+        var cfg = this.config;
         var VM = this.node.getComponent("ReelModel");
         this.rollingSpeed = cfg.superSpeed;
         this.lastSpeed = this.rollingSpeed;
@@ -250,7 +261,7 @@ export default class ReelViewCtrl extends cc.Component {
 
     finUpdate (dt) {
         this.stateDuration += dt;
-        var cfg = this.node.getComponent("ReelModel").config;
+        var cfg = this.config;
         var VM = this.node.getComponent("ReelModel");
         this.rollingSpeed = this.lastSpeed;
         var step = this.rollingSpeed * dt;
@@ -287,10 +298,11 @@ export default class ReelViewCtrl extends cc.Component {
 
     overUpdate (dt) {
         this.stateDuration += dt;
-        var cfg = this.node.getComponent("ReelModel").config;
+        var cfg = this.config;
         var VM = this.node.getComponent("ReelModel");
         var ratio = Math.min(1, this.stateDuration/cfg.slowDuration);
-        this.rollingSpeed = cc.misc.lerp(this.lastSpeed, cfg.slowSpeed, ratio);
+        var finRatio = this.easeFunc(cfg.slowEase)(ratio);
+        this.rollingSpeed = cc.misc.lerp(this.lastSpeed, 0, finRatio);
         var step = this.rollingSpeed * dt;
         this.container.y += step;
         this.overOffset += step;
@@ -319,19 +331,22 @@ export default class ReelViewCtrl extends cc.Component {
         if (this.rollingSpeed == 0) {
             this.fsm.bounce();
         }
-        // if (Math.abs(this.overOffset) >= cfg.overDistance) {
-        //     this.fsm.bounce();
-        // }
     }
 
     bounceUpdate (dt) {
         this.stateDuration += dt;
-        var cfg = this.node.getComponent("ReelModel").config;
+        var cfg = this.config;
         var VM = this.node.getComponent("ReelModel");
-        this.rollingSpeed = -this.overOffset/cfg.bounceDuration;
-        var step = this.rollingSpeed * dt;
+        var ratio = Math.min(1, this.stateDuration/cfg.bounceDuration);
+        var finRatio = this.easeFunc(cfg.bounceEase)(ratio);
+        // this.rollingSpeed = -this.overOffset/cfg.bounceDuration;
+        // var step = this.rollingSpeed * dt;
+        // this.container.y += step;
+        var curY = cc.misc.lerp(this.overOffset, 0, finRatio);
+        var step = curY - this.lastOffset;
+        this.lastOffset = curY;
         this.container.y += step;
-        if (this.rollingSpeed > 0) {
+        if (step > 0) {
             // reach this bottom of view
             var len = this.container.children.length;
             var bottomCell = this.container.children[len-1];
@@ -342,7 +357,7 @@ export default class ReelViewCtrl extends cc.Component {
                 VM.restoreCellDataReverse();
             }
         }
-        if (this.rollingSpeed < 0) {
+        if (step < 0) {
             // reach this top of view
             var len = this.container.children.length;
             var topCell = this.container.children[0];
@@ -360,19 +375,96 @@ export default class ReelViewCtrl extends cc.Component {
     }
 
     reset () {
+        this.lastSpeed = 0;
+        this.lastOffset = 0;
         this.overOffset = 0;
     }
 
+    easeFunc (type: EaseType): Function {
+        switch (type) {
+            case EaseType.Linear:
+                return this.linear;
+                break;
+            case EaseType.InSine:
+                return cc.easing.sineIn;
+                break;
+            case EaseType.InCubic:
+                return cc.easing.cubicIn;
+                break;
+            case EaseType.InQuint:
+                return cc.easing.quintIn;
+                break;
+            case EaseType.InCirc:
+                return cc.easing.circIn;
+                break;
+            case EaseType.InElastic:
+                return cc.easing.elasticIn;
+                break;
+            case EaseType.InQuad:
+                return cc.easing.quadIn;
+                break;
+            case EaseType.InQuart:
+                return cc.easing.quartIn;
+                break;
+            case EaseType.InExpo:
+                return cc.easing.expoIn;
+                break;
+            case EaseType.InBack:
+                return cc.easing.backIn;
+                break;
+            case EaseType.InBounce:
+                return cc.easing.bounceIn;
+                break;
+            case EaseType.OutSine:
+                return cc.easing.sineOut;
+                break;
+            case EaseType.OutCubic:
+                return cc.easing.cubicOut;
+                break;
+            case EaseType.OutQuint:
+                return cc.easing.quintOut;
+                break;
+            case EaseType.OutCirc:
+                return cc.easing.circOut;
+                break;
+            case EaseType.OutElastic:
+                return cc.easing.elasticOut;
+                break;
+            case EaseType.OutQuad:
+                return cc.easing.quadOut;
+                break;
+            case EaseType.OutQuart:
+                return cc.easing.quartOut;
+                break;
+            case EaseType.OutExpo:
+                return cc.easing.expoOut;
+                break;
+            case EaseType.OutBack:
+                return cc.easing.backOut;
+                break;
+            case EaseType.OutBounce:
+                return cc.easing.bounceOut;
+                break;
+            default:
+                return this.linear;
+                break;
+        }
+    }
+
+    linear (t: number): number {
+        return t;
+    }
+
     // test code
-    spinStart () {
+    startSpin () {
         this.fsm.acc();
     }
 
-    spinStop () {
+    stopSpin () {
         this.fsm.fin();
     }
 
-    spinSuper () {
+    superSpin () {
         this.fsm.super();
     }
 }
