@@ -40,7 +40,7 @@ export default class VMParent extends cc.Component {
     protected onLoad() {
         if (this.data == null) return;
         this.tag = '_temp' + '<'+ this.node.uuid.replace('.', '') + '>';
-        VM.add(this.data, this.tag);
+        this.VM.add(this.data, this.tag);
         //cc.log(VM['_mvs'],tag)
         //搜寻所有节点：找到 watch path
         let comps = this.getVMComponents();
@@ -118,7 +118,7 @@ export default class VMParent extends cc.Component {
     protected onDestroy() {
         this.onUnBind();
         //解除全部引用
-        VM.remove(this.tag);
+        this.VM.remove(this.tag);
         this.data = null;
     }
 

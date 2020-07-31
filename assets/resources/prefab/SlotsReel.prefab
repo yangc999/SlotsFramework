@@ -320,6 +320,19 @@
     "_id": ""
   },
   {
+    "__type__": "cecb2Nl5+RO6YeLod9RTWCJ",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "rootNode": null,
+    "initCell": [],
+    "rollCell": [],
+    "_id": ""
+  },
+  {
     "__type__": "216d7o3pqtJrKRbmJrluXQo",
     "_name": "",
     "_objFlags": 0,
@@ -327,7 +340,11 @@
       "__id__": 1
     },
     "_enabled": true,
+    "rootNode": null,
     "cellPrefab": null,
+    "config": {
+      "__id__": 11
+    },
     "cellSize": {
       "__type__": "cc.Size",
       "width": 0,
@@ -346,31 +363,16 @@
     "_id": ""
   },
   {
-    "__type__": "cecb2Nl5+RO6YeLod9RTWCJ",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "config": {
-      "__id__": 11
-    },
-    "symbols": [],
-    "initCell": [],
-    "rollCell": [],
-    "finCell": [],
-    "_id": ""
-  },
-  {
     "__type__": "ReelConfig",
     "spinSpeed": 0,
-    "accDuration": 0,
     "superSpeed": 0,
-    "slowSpeed": 0,
+    "accEase": 0,
+    "accDuration": 0,
+    "slowEase": 0,
     "slowDuration": 0,
-    "overDuration": 0,
-    "bounceDuration": 0
+    "bounceEase": 0,
+    "bounceDuration": 0,
+    "delayDuration": 0
   },
   {
     "__type__": "cc.PrefabInfo",

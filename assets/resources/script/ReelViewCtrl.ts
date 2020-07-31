@@ -137,6 +137,7 @@ export default class ReelViewCtrl extends cc.Component {
         this.mask.width = this.node.width;
         this.mask.height = this.node.height;
         var VM = this.node.getComponent("ReelModel");
+        VM.initCellData();
         for (var i = 0; i < this.cellCount.y+2; i++) {
             var cell = cc.instantiate(this.cellPrefab);
             var cellCtrl = cell.getComponent("CellViewCtrl");
@@ -156,7 +157,6 @@ export default class ReelViewCtrl extends cc.Component {
 
     idleUpdate (dt) {
         this.stateDuration += dt;
-        var cfg = this.config;
     }
 
     accUpdate (dt) {
@@ -261,7 +261,6 @@ export default class ReelViewCtrl extends cc.Component {
 
     finUpdate (dt) {
         this.stateDuration += dt;
-        var cfg = this.config;
         var VM = this.node.getComponent("ReelModel");
         this.rollingSpeed = this.lastSpeed;
         var step = this.rollingSpeed * dt;
@@ -302,6 +301,7 @@ export default class ReelViewCtrl extends cc.Component {
         var VM = this.node.getComponent("ReelModel");
         var ratio = Math.min(1, this.stateDuration/cfg.slowDuration);
         var finRatio = this.easeFunc(cfg.slowEase)(ratio);
+        cc.log("finRatio", finRatio);
         this.rollingSpeed = cc.misc.lerp(this.lastSpeed, 0, finRatio);
         var step = this.rollingSpeed * dt;
         this.container.y += step;
@@ -328,7 +328,7 @@ export default class ReelViewCtrl extends cc.Component {
                 VM.overCellDataReverse();
             }
         }
-        if (this.rollingSpeed == 0) {
+        if (this.stateDuration >= cfg.slowDuration) {
             this.fsm.bounce();
         }
     }

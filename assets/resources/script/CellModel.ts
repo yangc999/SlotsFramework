@@ -20,6 +20,7 @@ export default class CellModel extends VMBase {
     // text: string = 'hello';
     
     spriteNode: cc.Node;
+    
     rootNode: cc.Node;
 
     // LIFE-CYCLE CALLBACKS:

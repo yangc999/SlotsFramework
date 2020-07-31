@@ -183,7 +183,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "fc658005-56c9-4b3f-83d3-f8fcdcb2ead8"
     },
     "fileId": "a8q/cUHkVEorTJEYOfGles",
     "sync": false
@@ -209,7 +209,7 @@
     "_id": ""
   },
   {
-    "__type__": "9a147xp7BBPj6xyWQ8JTkQo",
+    "__type__": "7499e074TtH0ogSaTsTRcau",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -219,7 +219,7 @@
     "_id": ""
   },
   {
-    "__type__": "7499e074TtH0ogSaTsTRcau",
+    "__type__": "9a147xp7BBPj6xyWQ8JTkQo",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -234,7 +234,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "fc658005-56c9-4b3f-83d3-f8fcdcb2ead8"
     },
     "fileId": "00KpTWTndK7YwXiQqXc7L/",
     "sync": false

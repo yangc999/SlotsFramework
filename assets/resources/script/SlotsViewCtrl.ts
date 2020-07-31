@@ -50,6 +50,19 @@ export default class SlotsViewCtrl extends cc.Component {
     }
     
     stopSpin () {
+        var VM = this.node.getComponent("SlotsModel");
+        for (let index = 0; index < VM.data.finCells.length; index++) {
+            var element = VM.data.finCells[index];
+            var len = element.length;
+            for (let idx = 0; idx < len; idx++) {
+                element.pop();
+            }
+            element.push("1");
+            element.push("3");
+            element.push("2");
+            element.push("4");
+            element.push("0");
+        }
         this.reels.forEach(element => {
             element.getComponent("ReelViewCtrl").stopSpin();
         });

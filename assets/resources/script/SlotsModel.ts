@@ -8,9 +8,10 @@
 const {ccclass, property} = cc._decorator;
 
 import SymbolConfig from "./SymbolConfig";
+import VMParent from "../../modelView/VMParent";
 
 @ccclass
-export default class SlotsModel extends cc.Component {
+export default class SlotsModel extends VMParent {
 
     // @property(cc.Label)
     // label: cc.Label = null;
@@ -21,13 +22,26 @@ export default class SlotsModel extends cc.Component {
     @property([SymbolConfig])
     symbols: SymbolConfig[] = [];
 
+    data = {
+        finCells: [],
+    }
+
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {}
+    onLoad () {
+        for (let index = 0; index < this.node.children.length; index++) {
+            this.data.finCells.push([]);
+        }
+        super.onLoad();
+    }
 
     start () {
 
     }
 
     // update (dt) {}
+
+    getTag () {
+        return this.tag;
+    }
 }
