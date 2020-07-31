@@ -29,7 +29,8 @@ export default class SlotsModel extends VMParent {
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        for (let index = 0; index < this.node.children.length; index++) {
+        var reels = this.node.getComponent("SlotsViewCtrl").reels;
+        for (let index = 0; index < reels.length; index++) {
             this.data.finCells.push([]);
         }
         super.onLoad();

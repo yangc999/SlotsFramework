@@ -724,14 +724,14 @@
   },
   {
     "__type__": "ReelConfig",
-    "spinSpeed": -800,
+    "spinSpeed": -1200,
     "superSpeed": -1500,
     "accEase": 0,
     "accDuration": 0.2,
     "slowEase": 0,
-    "slowDuration": 0.05,
-    "bounceEase": 1,
-    "bounceDuration": 0.15,
+    "slowDuration": 0.1,
+    "bounceEase": 9,
+    "bounceDuration": 0.2,
     "delayDuration": 0
   },
   {
@@ -1125,14 +1125,14 @@
   },
   {
     "__type__": "ReelConfig",
-    "spinSpeed": -800,
+    "spinSpeed": -1200,
     "superSpeed": -1500,
     "accEase": 0,
     "accDuration": 0.2,
     "slowEase": 0,
-    "slowDuration": 0.05,
+    "slowDuration": 0.1,
     "bounceEase": 1,
-    "bounceDuration": 0.15,
+    "bounceDuration": 0.2,
     "delayDuration": 0
   },
   {
